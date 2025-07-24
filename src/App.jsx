@@ -1,6 +1,8 @@
+import { useState } from "react"
+import course from "./data/course"
+
 
 const Header = ({name}) => {
-  console.log(name)
   return <h1>{name}</h1>
 
 }
@@ -22,8 +24,6 @@ const Content = ({parts}) =>{
 
 
 const Total = ({parts}) => {
-  console.log(parts)
-  console.log({parts})
   let sum = parts.reduce((total, part) => total + part.exercises, 0)
   return(
     <>
@@ -32,29 +32,48 @@ const Total = ({parts}) => {
   )
 }
 
+const Display = ({counter}) => <h1>{counter}</h1>
+
+const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
+
+
 
 
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
+  const [counter, setCounter] = useState(0)
+  console.log('rendering with counter value', counter)
+
+  const increaseByOne = () => {
+    console.log('increasing, value before', counter)
+    setCounter(counter + 1)
+  }
+
+  const decreaseByOne = () => { 
+    console.log('decreasing, value before', counter)
+    setCounter(counter - 1)
+  }
+
+  const setToZero = () => {
+    console.log('resetting to zero, value before', counter)
+    setCounter(0)
   }
 
   return (
     <div>
+      <Display counter={counter}/>
+      <Button
+        onClick={increaseByOne}
+        text='plus'
+      />
+      <Button
+        onClick={setToZero}
+        text='zero'
+      />     
+      <Button
+        onClick={decreaseByOne}
+        text='minus'
+      />         
+
       <Header {...course} />
       <Content {...course}/>
       <Total {...course} />
