@@ -1,100 +1,43 @@
-import { useState } from "react"
-import course from "./data/course"
+import { useState } from 'react'
 
-
-const Header = ({name}) => {
-  return <h1>{name}</h1>
-
+const Button = ({onClick, text}) => {
+  return <button onClick={onClick}>{text}</button>
 }
 
-const Part = ({name, exercises}) =>{
-  return <p>{name} {exercises}</p>
-}
+const Statistics = ({good, bad, neutral}) => {
+  if(good==0 && bad==0 && neutral==0){
+    return <p>No feedback given</p>
+  }
 
-const Content = ({parts}) =>{
-  const listParts = parts.map(part=><Part {...part}/>)
-  return(
-    <div>
-      {listParts}
-    </div>
-  )
-
-}
-
-
-
-const Total = ({parts}) => {
-  let sum = parts.reduce((total, part) => total + part.exercises, 0)
   return(
     <>
-      <p>Number of exercises {sum}</p>
+      <p>good: {good}</p>
+      <p>neutral: {neutral}</p>
+      <p>bad: {bad}</p>
+      <p>all: {good+neutral+bad}</p>
+      <p>Average: {(good-bad)/(good+bad+neutral)}</p>
+      <p>Positive: {good/(good+bad+neutral)}%</p>
     </>
   )
 }
 
-const Display = ({counter}) => <h1>{counter}</h1>
-
-const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
-
-
-
-
 const App = () => {
-  const [counter, setCounter] = useState(0)
-
-  const [clicks, setClicks] = useState({
-    left: 0, right: 0
-  })
-
-  const handleLeftClick = () =>
-    setClicks({ ...clicks, left: clicks.left + 1 })
-
-  const handleRightClick = () =>
-    setClicks({ ...clicks, right: clicks.right + 1 })
-
-
-  console.log('rendering with counter value', counter)
-
-  const increaseByOne = () => {
-    console.log('increasing, value before', counter)
-    setCounter(counter + 1)
-  }
-
-  const decreaseByOne = () => { 
-    console.log('decreasing, value before', counter)
-    setCounter(counter - 1)
-  }
-
-  const setToZero = () => {
-    console.log('resetting to zero, value before', counter)
-    setCounter(0)
-  }
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
 
   return (
     <div>
-      <div>
-        {clicks.left}
-        <button onClick={handleLeftClick}>left</button>
-        <button onClick={handleRightClick}>right</button>
-        {clicks.right}
-      </div>
-      <Display counter={counter}/>
-      <Button
-        onClick={increaseByOne}
-        text='plus'
-      />
-      <Button
-        onClick={setToZero}
-        text='zero'
-      />     
-      <Button
-        onClick={decreaseByOne}
-        text='minus'
-      />         
+      <h1>Give feedback</h1>
+      <Button onClick={()=>setGood(good + 1)} text={'good'}/>
+      <Button onClick={()=>setNeutral(neutral + 1)} text={'neutral'}/>
+      <Button onClick={()=>setBad(bad + 1)} text={'bad'}/>
 
-      <Header {...course} />
-      <Content {...course}/>
-      <Total {...course} />
+
+      <h1>Statistics</h1>
+      <Statistics good={good} bad={bad} neutral={neutral}/>
+
     </div>
   )
 }
